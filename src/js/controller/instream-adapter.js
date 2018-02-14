@@ -64,6 +64,24 @@ var InstreamAdapter = function(_controller, _model, _view, _mediaPool) {
 
     this.type = 'instream';
 
+    this.addAdProgramTimeListener = function() {
+        if (_inited || _destroyed) {
+            return;
+        }
+
+        _adProgram.on(MEDIA_TIME, _instreamTime, this);
+
+        // This enters the player into instream mode
+        _model.set('instream', _adProgram);
+
+        // don't trigger api play/pause on display click
+        if (_view.clickHandler()) {
+            _view.clickHandler().setAlternateClickHandlers(() => {}, null);
+        }
+
+        return this;
+    };
+
     this.init = function() {
         if (_inited || _destroyed) {
             return;
